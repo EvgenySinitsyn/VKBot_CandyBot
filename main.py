@@ -16,7 +16,8 @@ if not all([token, community_id, database_name, database_password, database_user
     и добавить в него константы:
     ACCESS_TOKEN = "<Токен сообщества>"
     COMMUNITY_ID = "<ID сообщества>"
-    DATABASE_PASSWORD = <"Пароль к базе данных">
+    POSTGRES_USER = "<Пользователь базы данных>"
+    POSTGRES_PASSWORD = "<Пароль к базе данных>"
     DATABASE_NAME = "<Имя базы данных>"
     """)
     exit()
