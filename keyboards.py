@@ -12,7 +12,6 @@ class Keyboards:
     def get_categories_keyboard(self):
         """
         Получить клавиатуру категорий
-        :return:
         """
         self.db.get_connection()
         cursor = self.db.cursor
@@ -34,9 +33,6 @@ class Keyboards:
     def get_products_keyboard(self, category, chosen_product=None):
         """
         Получить клавиатуру продуктов категории
-        :param category:
-        :param chosen_product:
-        :return:
         """
         self.db.get_connection()
         cursor = self.db.cursor

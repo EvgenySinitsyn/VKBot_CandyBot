@@ -17,8 +17,6 @@ class Database:
     def get_connection(self, db_exists=True):
         """
         Подключиться к базе данных
-        :param db_exists:
-        :return:
         """
         try:
             kwargs = {"user": self.user,
@@ -30,14 +28,14 @@ class Database:
             self.connection = psycopg2.connect(**kwargs)
             self.connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
             self.cursor = self.connection.cursor()
-        except:
+        except Exception as ex:
+            print(ex)
             print("Проверьте настройки PostgreSQL")
             exit()
 
     def create_data_base(self):
         """
         Создание базы данных
-        :return:
         """
         try:
             self.get_connection(db_exists=False)
@@ -75,7 +73,6 @@ class Database:
     def close_connection(self):
         """
         Закрытие подключения
-        :return:
         """
         if self.cursor:
             self.cursor.close()

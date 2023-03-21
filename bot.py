@@ -21,10 +21,10 @@ class Bot:
     def run(self):
         """
         Запуск бота
-        :return:
         """
         while True:
             try:
+                print("Подключился")
                 self.vk_session = vk_api.VkApi(token=self.token)
                 self.vk = self.vk_session.get_api()
                 self.upload = vk_api.VkUpload(self.vk_session)

@@ -11,6 +11,7 @@ class Actions:
     CATEGORIES_STATE = 1
     MENU_STATE = 2
     PRODUCT_STATE = 3
+    BACK_TO_CATEGORIES_BUTTON = "Назад к категориям"
 
     def __init__(self, received_user_id, received_message_text, db, vk, upload):
         self.received_user_id = received_user_id
@@ -22,11 +23,6 @@ class Actions:
     def send_message(self, user_id, message_text, keyboard=None, attachment=None):
         """
         Отправить сообщение
-        :param user_id:
-        :param message_text:
-        :param keyboard:
-        :param attachment:
-        :return:
         """
         try:
             kwargs = {
@@ -44,8 +40,6 @@ class Actions:
     def set_user_state(self, state):
         """
         Обновить состояние пользователя
-        :param state:
-        :return:
         """
         self.db.get_connection()
         cursor = self.db.cursor
@@ -59,8 +53,6 @@ class Actions:
     def show_menu(self, category):
         """
         Показать меню товаров категории
-        :param category:
-        :return:
         """
         self.set_user_state(self.MENU_STATE)
         keyboard = Keyboards(self.db).get_products_keyboard(category)
@@ -68,13 +60,11 @@ class Actions:
             self.send_message(user_id=self.received_user_id, message_text="Выберите наименование товара: ", keyboard=keyboard)
         else:
             self.send_message(user_id=self.received_user_id, message_text='Неизвестная команда...')
-            self.show_categories(self.received_user_id)
+            self.show_categories()
 
     def show_product(self, product):
         """
         Показать детализацию продукта
-        :param product:
-        :return:
         """
         try:
             self.db.get_connection()
@@ -102,17 +92,15 @@ class Actions:
             self.send_message(user_id=self.received_user_id, message_text=chosen_product[1], keyboard=keyboard,
                               attachment=attachment)
             self.db.close_connection()
-        except Exception as ex:
-            print(ex)
-            self.send_message(user_id=self.received_user_id, message_text='Неизвестная команда...')
-            self.show_categories(self.received_user_id)
+        except:
+            if product != self.BACK_TO_CATEGORIES_BUTTON:
+                self.send_message(user_id=self.received_user_id, message_text='Неизвестная команда...')
+            self.show_categories()
             self.db.close_connection()
 
-    def show_categories(self, user_id):
+    def show_categories(self):
         """
         Показать категории
-        :param user_id:
-        :return:
         """
         self.db.get_connection()
         cursor = self.db.cursor
@@ -120,15 +108,13 @@ class Actions:
         self.db.close_connection()
         keyboard = Keyboards(self.db).get_categories_keyboard()
         if keyboard:
-            self.send_message(user_id=user_id, message_text="Выберите категорию: ", keyboard=keyboard)
+            self.send_message(user_id=self.received_user_id, message_text="Выберите категорию: ", keyboard=keyboard)
         else:
-            self.send_message(user_id=user_id, message_text="Магазин пуст...")
+            self.send_message(user_id=self.received_user_id, message_text="Магазин пуст...")
 
     def get_state_number(self, user_id):
         """
         Получить состояние пользователя
-        :param user_id:
-        :return:
         """
         try:
             self.db.get_connection()
@@ -148,8 +134,6 @@ class Actions:
     def add_vkuser(self, id_user):
         """
         Добавить нового пользователя в БД
-        :param id_user:
-        :return:
         """
         self.db.get_connection()
         cursor = self.db.cursor
